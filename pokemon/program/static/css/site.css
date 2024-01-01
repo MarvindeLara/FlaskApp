@@ -1,0 +1,71 @@
+body {
+    font-family: "Poppins", sans-serif !important;
+    font-size: .95rem;
+
+}
+
+#main-content {
+    color: black;
+    background-color: white;
+
+    display: flex;
+    /*vertically stack children*/
+    flex-direction: column;
+    /* expand to take full height of page */
+    /* min-height overrides both height & max-height */
+    min-height: 100vh;
+
+}
+
+#hero {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+    color: #f8f8f8;
+    background: white url(/static/img/banner.png) no-repeat center center;
+    background-size: cover;
+    min-height: 300px;
+}
+
+#hero div{
+    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.41);
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 3rem;
+}
+
+footer {
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    line-height: 2.5em;
+    font-size: 14px;
+}
+
+footer a {
+    color: #f8f9fa;
+    margin: 10px;
+}
+
+footer a:hover {
+    color: dodgerblue;
+}
+
+.pokemon-content{
+    margin-bottom: 50px;
+}
+
+.pokemon-image img {
+    opacity: 1;
+    width: 100%;
+    height: auto;
+    transform: scale(1);
+    transition: transform 0.5s opacity 0.5s;
+}
+
+.pokemon-image img:hover {
+    opacity: 1;
+    transform: scale(1.25);
+}
+
