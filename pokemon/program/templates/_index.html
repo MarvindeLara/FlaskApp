@@ -1,0 +1,485 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div>
+        <div id="hero">
+            <div>
+            <h1 class="fw-bold">Pokemon Tournament</h1>
+            <h5 class="fw-light">Catch your pokemon, join a tournament, and earn badges!</h5>
+            </div>
+        </div>
+
+        {% if current_user.is_authenticated %}
+        <br>
+        <br>
+        <br>
+        <div>
+            <h1 class="fw-normal text-center">Welcome {{current_user.email}}!</h1>
+            <h5 class="fw-light text-center">Your current available coins is {{current_user.coins}}.</h5>
+        </div>
+        {% endif %}
+
+        <div>
+            <br>
+            <br>
+            <br>
+            <h2 class="fw-normal text-center"> Choose your pokemon.</h2>
+            <p class="fw-normal text-center"> Click on the pokemon name to show abilities.</p>
+            <br>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-1">
+                    </div>
+                    <div class="col-lg-3 d-flex justify-content-start">
+                        <form>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-3 d-flex justify-content-end">
+                        <form method="POST" action="/index">
+                            <div class="input-group" style="width: 268px;">
+                                <select class="form-select" name="pokemon_type">
+                                    <option selected disabled>Choose...</option>
+                                    <option>Normal</option>
+                                    <option>Fighting</option>
+                                    <option>Flying</option>
+                                    <option>Poison</option>
+                                    <option>Ground</option>
+                                    <option>Rock</option>
+                                    <option>Bug</option>
+                                    <option>Ghost</option>
+                                    <option>Steel</option>
+                                    <option>Fire</option>
+                                    <option>Water</option>
+                                    <option>Grass</option>
+                                    <option>Electric</option>
+                                    <option>Psychic</option>
+                                    <option>Ice</option>
+                                    <option>Dragon</option>
+                                    <option>Dark</option>
+                                    <option>Fairy</option>
+                                    <option>Shadow</option>
+                                    <option>Unknown</option>
+                                </select>
+                                <button type="submit" class="btn btn-secondary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+            </div>
+            <br>
+            {% if all_pokemon %}
+            <div class="container">
+                {% for pokemon in all_pokemon %}
+                <div class="row">
+                    <div class="col-lg-1">
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[0] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[0]["sprites"]["other"]["official-artwork"]["front_shiny"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" title="Abilities" data-bs-content="ability1, ability2, ability3">{{pokemon[0]["species"]["name"][0].upper()}}{{pokemon[0]["species"]["name"][1:]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[0]["types"] %}
+                                            {% if t["type"]["name"] == "normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="/" class="card-footer btn text-decoration-none text-success">Catch for 73 coins.</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[1] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[1]["sprites"]["other"]["official-artwork"]["front_shiny"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" title="Abilities" data-bs-content="ability1, ability2, ability3">{{pokemon[1]["species"]["name"][0].upper()}}{{pokemon[1]["species"]["name"][1:]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[1]["types"] %}
+                                            {% if t["type"]["name"] == "normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="/" class="card-footer btn text-decoration-none text-success">Catch for 73 coins.</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[2] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[2]["sprites"]["other"]["official-artwork"]["front_shiny"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" title="Abilities" data-bs-content="ability1, ability2, ability3">{{pokemon[2]["species"]["name"][0].upper()}}{{pokemon[2]["species"]["name"][1:]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[2]["types"] %}
+                                            {% if t["type"]["name"] == "normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="/" class="card-footer btn text-decoration-none text-success">Catch for 73 coins.</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[3] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[3]["sprites"]["other"]["official-artwork"]["front_shiny"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <!--<h6 class="card-title text-center">{{pokemon[3]["species"]["name"][0].upper()}}{{pokemon[3]["species"]["name"][1:]}}</h6>-->
+                                    <!--<h6 class = "card-title text-center" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" title="Abilities" data-bs-content="ability1, ability2, ability3"><span class="text-decoration-none text-body" role="button">{{pokemon[3]["species"]["name"][0].upper()}}{{pokemon[3]["species"]["name"][1:]}}</span></h6>-->
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" title="Abilities" data-bs-content="ability1, ability2, ability3">{{pokemon[3]["species"]["name"][0].upper()}}{{pokemon[3]["species"]["name"][1:]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[3]["types"] %}
+                                            {% if t["type"]["name"] == "normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="/" class="card-footer btn text-decoration-none text-success">Catch for 73 coins.</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[4] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[4]["sprites"]["other"]["official-artwork"]["front_shiny"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" title="Abilities" data-bs-content="ability1, ability2, ability3">{{pokemon[4]["species"]["name"][0].upper()}}{{pokemon[4]["species"]["name"][1:]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[4]["types"] %}
+                                            {% if t["type"]["name"] == "normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t["type"]["name"] == "unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t["type"]["name"][0].upper()}}{{t["type"]["name"][1:]}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="/" class="card-footer btn text-decoration-none text-success">Catch for 73 coins.</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <br>
+        <br>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div>
+        <!--email, hashed_password, full_name, coins-->
+        <div id="hero">
+            <div>
+            <h1 class="fw-bold">Pokemon Tournament</h1>
+            <h5 class="fw-light">Catch your pokemon, join a tournament, and earn badges!</h5>
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                </div>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul class="flashes text-success">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="col-lg-4">
+                </div>
+            </div>
+        </div>
+
+        <form method="POST"> <!--it's accepted not to have action here-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-4" style="background-color: #F7F8F9; padding-top: 22px; padding-left: 20px; padding-right: 20px; padding-bottom: 10px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <span class="bi bi-envelope"></span>
+                            </span>
+                            <input type="email" class="form-control" placeholder="Email" required name="email">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-4" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <span class="bi bi-key"></span>
+                            </span>
+                            <input type="password" class="form-control " placeholder="Password" required name="hashed_password">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-4" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 20px; padding-right: 20px; padding-bottom: 22px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                        <div class="input-group">
+                            <button type="submit" class="btn btn-primary">Log in</button>
+                            <button type="reset" class="btn btn-danger">Reset</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <br>
+    </div>
+{% endblock %}
+

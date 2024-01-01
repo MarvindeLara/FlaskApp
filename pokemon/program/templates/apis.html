@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div>
+        <div id="hero">
+            <div>
+            <h1 class="fw-bold">Pokemon Tournament</h1>
+            <h5 class="fw-light">Catch your pokemon, join a tournament, and earn badges!</h5>
+            </div>
+        </div>
+
+        {% if current_user.is_authenticated %}
+        <br>
+        <br>
+        <br>
+        <div>
+            <h1 class="fw-normal text-center">Welcome {{current_user.email}}!</h1>
+            <h5 class="fw-light text-center">Your current available coins is {{current_user.coins}}.</h5>
+        </div>
+        {% endif %}
+
+        <div>
+            <br>
+            <br>
+            <br>
+            <h2 class="fw-light text-center"> Use these APIs to search for pokemon information.</h2>
+<!--            <p class="fw-normal text-center"> Click on the pokemon name to show abilities.</p>-->
+            <br>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8">
+                        <h6 class="fw-light text-start">E.g. &lt;name&gt; or ?limit=100000&offset=0</h6>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8">
+                        <form method="POST">
+                            <div class="input-group">
+                                <span class="input-group-text">http://127.0.0.1:5000/api/pokemon/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <input type="text" class="form-control" placeholder="<name>" name="api_1" value="{{ request.form['api_1'] }}">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                {% if output_1 %}
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8">
+                            <textarea disabled rows="20" class="w-100 fw-light text-start" style="border: 1px solid #CED4DA; background: #E9ECEF; border-radius: 4px; padding: 12px; font-size: 14px; white-space: break-spaces; max-width: 100%;">{{output_1}}</textarea>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                    </div>
+                {% endif %}
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8">
+                        <h6 class="fw-light text-start">E.g. types or &lt;type&gt; or ?types=Grass,Poison or &lt;type&gt;?min_coins=100&max_coins=1000</h6>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8">
+                        <form method="POST">
+                            <div class="input-group">
+                                <span class="input-group-text">http://127.0.0.1:5000/api/pokemon_type/&nbsp;&nbsp;&nbsp;</span>
+                                <input type="text" class="form-control" placeholder="<type>" name="api_2" value="{{ request.form['api_2'] }}">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                {% if output_2 %}
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8">
+                            <textarea disabled rows="20" class="w-100 fw-light text-start" style="border: 1px solid #CED4DA; background: #E9ECEF; border-radius: 4px; padding: 12px; font-size: 14px; white-space: break-spaces; max-width: 100%;">{{output_2}}</textarea>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                    </div>
+                {% endif %}
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8">
+                        <h6 class="fw-light text-start">E.g. abilities or &lt;ability&gt; or &lt;ability&gt;?min_coins=100&max_coins=1000</h6>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8">
+                        <form method="POST">
+                            <div class="input-group">
+                                <span class="input-group-text">http://127.0.0.1:5000/api/pokemon_ability/</span>
+                                <input type="text" class="form-control" placeholder="<ability>" name="api_3" value="{{ request.form['api_3'] }}">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                {% if output_3 %}
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8">
+                            <textarea disabled rows="20" class="w-100 fw-light text-start" style="border: 1px solid #CED4DA; background: #E9ECEF; border-radius: 4px; padding: 12px; font-size: 14px; white-space: break-spaces; max-width: 100%;">{{output_3}}</textarea>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                    </div>
+                {% endif %}
+                <br>
+                <br>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div>
+{% endblock %}
+

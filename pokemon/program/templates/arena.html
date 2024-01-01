@@ -1,0 +1,1720 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div>
+        <div id="hero">
+            <div>
+            <h1 class="fw-bold">Pokemon Tournament</h1>
+            <h5 class="fw-light">Catch your pokemon, join a tournament, and earn badges!</h5>
+            </div>
+        </div>
+
+        {% if current_user.is_authenticated %}
+        <br>
+        <br>
+        <br>
+        <div>
+            <h1 class="fw-normal text-center">Welcome {{current_user.email}}!</h1>
+            <h5 class="fw-light text-center">Your current available coins is {{current_user.coins}}.</h5>
+        </div>
+        {% endif %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                </div>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul class="flashes text-danger">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="col-lg-4">
+                </div>
+            </div>
+        </div>
+
+        {% if result == 0 or result == 1 %}
+        <div>
+            <br>
+            <br>
+            <br>
+            {% if result == 0 %}
+                <h2 class="fw-normal text-center text-success"> You win.</h2>
+                <h5 class="fw-light text-center"> You earned {{opponent['damages'][0] + opponent['damages'][1] + opponent['damages'][2]}} coins.</h5>
+            {% endif %}
+            {% if result == 1 %}
+                <h2 class="fw-normal text-center text-danger"> Opponent wins.</h2>
+                <h5 class="fw-light text-center"> You lost {{player['damages'][0] + player['damages'][1] + player['damages'][2]}} coins.</h5>
+            {% endif %}
+            <br>
+            <br>
+            <div class="container">
+                <div class="row">
+<!--                    <div class="col-lg-1">-->
+<!--                    </div>-->
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card pokemon-content">
+                            <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                <img src={{player["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="300" height="300">
+                            </div>
+                            <div class="card-body">
+                                <h5 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{player["abilities"]}}>{{player["name"]}}</h5>
+                                <div class="d-flex justify-content-center">
+                                    {% for t in player["types"].split(', ') %}
+                                        {% if t == "Normal" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fighting" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Flying" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Poison" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ground" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Rock" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Bug" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ghost" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Steel" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fire" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Water" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Grass" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Electric" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Psychic" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ice" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dragon" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dark" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fairy" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Shadow" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Unknown" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+<!--                            <form method="POST" action="/arena">-->
+<!--                                <input type="hidden" name="opponent_id" value={{opponent.id}}>-->
+<!--                                <input type="hidden" name="player_id" value={{player.id}}> &lt;!&ndash;can also get through dot&ndash;&gt;-->
+<!--                                <input type="hidden" name="opponent_attack_1" value={{opponent["attacks"][0]}}>-->
+<!--                                <input type="hidden" name="opponent_attack_2" value={{opponent["attacks"][1]}}>-->
+<!--                                <input type="hidden" name="opponent_attack_3" value={{opponent["attacks"][2]}}>-->
+<!--                                <input type="hidden" name="play" value='True'>-->
+
+                                <div class="card-footer">  <!--d-flex justify-content-center-->
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 12px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                                <div class="input-group">
+    <!--                                                <select class="form-select" style="width: 110px;" required name="attack_1">-->
+    <!--                                                    <option selected disabled>Set attack...</option>-->
+    <!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+    <!--                                                        <option>{{a}}</option>-->
+    <!--                                                    {% endfor %}-->
+    <!--                                                </select>-->
+                                                    <input type="text" class="form-control" style="width: 110px;" value={{player["attacks"][0]}}>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    <input type="text" class="form-control" value={{player["damages"][0]}}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                                <div class="input-group">
+    <!--                                                <select class="form-select" style="width: 110px;" required name="attack_2">-->
+    <!--                                                    <option selected disabled>Set attack...</option>-->
+    <!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+    <!--                                                        <option>{{a}}</option>-->
+    <!--                                                    {% endfor %}-->
+    <!--                                                </select>-->
+                                                    <input type="text" class="form-control" style="width: 110px;" value={{player["attacks"][1]}}>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    <input type="text" class="form-control" value={{player["damages"][1]}}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 10px;">
+                                                <div class="input-group">
+    <!--                                                <select class="form-select" style="width: 110px;" required name="attack_3">-->
+    <!--                                                    <option selected disabled>Set attack...</option>-->
+    <!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+    <!--                                                        <option>{{a}}</option>-->
+    <!--                                                    {% endfor %}-->
+    <!--                                                </select>-->
+                                                    <input type="text" class="form-control" style="width: 110px;" value={{player["attacks"][2]}}>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    <input type="text" class="form-control" value={{player["damages"][2]}}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 0px; padding-right: 0px; padding-bottom: 12px;">
+                                                <div class="input-group">
+    <!--                                                <select class="form-select" style="width: 110px;" required name="attack_3">-->
+    <!--                                                    <option selected disabled>Set attack...</option>-->
+    <!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+    <!--                                                        <option>{{a}}</option>-->
+    <!--                                                    {% endfor %}-->
+    <!--                                                </select>-->
+<!--                                                    <input type="text" class="form-control" style="width: 110px;" value={{player["attacks"][2]}}>-->
+                                                    <span class="input-group-text">Total</span>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    {% if result == 0 %}
+                                                        <input type="text" class="form-control text-success" value={{player.damages[0] + player.damages[1] + player.damages[2]}}>
+                                                    {% endif %}
+                                                    {% if result == 1 %}
+                                                        <input type="text" class="form-control text-danger" value={{player.damages[0] + player.damages[1] + player.damages[2]}}>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+<!--                                    <div class="container d-flex justify-content-center">-->
+<!--                                        <div class="row">-->
+<!--                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 0px; padding-right: 0px; padding-bottom: 12px;">-->
+<!--                                                <div class="input-group">-->
+<!--&lt;!&ndash;                                                    <input type="submit" class="btn btn-primary text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Play now."></input>&ndash;&gt;-->
+<!--                                                    <button type="submit" class="btn btn-primary">&nbspPlay&nbsp</button>-->
+<!--                                                    <button type="reset" class="btn btn-danger">Reset</button>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                </div>
+<!--                            </form>-->
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card pokemon-content">
+                            <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                <img src={{opponent["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="300" height="300">
+                            </div>
+                            <div class="card-body">
+                                <h5 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{opponent["abilities"]}}>{{opponent["name"]}}</h5>
+                                <div class="d-flex justify-content-center">
+                                    {% for t in opponent["types"].split(', ') %}
+                                        {% if t == "Normal" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fighting" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Flying" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Poison" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ground" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Rock" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Bug" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ghost" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Steel" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fire" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Water" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Grass" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Electric" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Psychic" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ice" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dragon" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dark" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fairy" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Shadow" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Unknown" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="card-footer">  <!--d-flex justify-content-center-->
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 12px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_1">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+                                                <input type="text" class="form-control" style="width: 110px;" value={{opponent["attacks"][0]}}>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                <input type="text" class="form-control" value={{opponent["damages"][0]}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_2">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+                                                <input type="text" class="form-control" style="width: 110px;" value={{opponent["attacks"][1]}}>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                <input type="text" class="form-control" value={{opponent["damages"][1]}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 10px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_3">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+                                                <input type="text" class="form-control" style="width: 110px;" value={{opponent["attacks"][2]}}>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                <input type="text" class="form-control" value={{opponent["damages"][2]}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 0px; padding-right: 0px; padding-bottom: 12px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_3">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+<!--                                                    <input type="text" class="form-control" style="width: 110px;" value={{player["attacks"][2]}}>-->
+                                                <span class="input-group-text">Total</span>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                {% if result == 0 %}
+                                                    <input type="text" class="form-control text-danger" value={{opponent.damages[0] + opponent.damages[1] + opponent.damages[2]}}>
+                                                {% endif %}
+                                                {% if result == 1 %}
+                                                    <input type="text" class="form-control text-success" value={{opponent.damages[0] + opponent.damages[1] + opponent.damages[2]}}>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="container d-flex justify-content-center" style="visibility: hidden;">-->
+<!--                                    <div class="row">-->
+<!--                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 0px; padding-right: 0px; padding-bottom: 12px;">-->
+<!--                                            <div class="input-group">-->
+<!--&lt;!&ndash;                                                    <input type="submit" class="btn btn-primary text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Play now."></input>&ndash;&gt;-->
+<!--                                                <button type="" class="btn btn-primary">&nbspPlay&nbsp</button>-->
+<!--                                                <button type="" class="btn btn-danger">Reset</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+<!--                    <div class="col-lg-1">-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if opponent and player and result == None %}
+        <div>
+            <br>
+            <br>
+            <br>
+            <h2 class="fw-normal text-center"> Set attacks, assign damage, and play.</h2>
+            <p class="fw-normal text-center"> Damage costs coins. If you win, you will get all coins bet by the opponent.</p>
+            <br>
+            <br>
+            <div class="container">
+                <div class="row">
+<!--                    <div class="col-lg-1">-->
+<!--                    </div>-->
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card pokemon-content">
+                            <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                <img src={{player["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="300" height="300">
+                            </div>
+                            <div class="card-body">
+                                <h5 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{player["abilities"]}}>{{player["name"]}}</h5>
+                                <div class="d-flex justify-content-center">
+                                    {% for t in player["types"].split(', ') %}
+                                        {% if t == "Normal" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fighting" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Flying" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Poison" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ground" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Rock" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Bug" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ghost" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Steel" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fire" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Water" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Grass" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Electric" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Psychic" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ice" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dragon" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dark" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fairy" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Shadow" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Unknown" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <form method="POST" action="/arena">
+                                <input type="hidden" name="opponent_id" value={{opponent.id}}>
+                                <input type="hidden" name="player_id" value={{player.id}}> <!--can also get through dot-->
+                                <input type="hidden" name="opponent_attack_1" value={{opponent["attacks"][0]}}>
+                                <input type="hidden" name="opponent_attack_2" value={{opponent["attacks"][1]}}>
+                                <input type="hidden" name="opponent_attack_3" value={{opponent["attacks"][2]}}>
+                                <input type="hidden" name="play" value='True'>
+
+                                <div class="card-footer">  <!--d-flex justify-content-center-->
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 12px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                                <div class="input-group">
+                                                    <select class="form-select" style="width: 110px;" required name="player_attack_1">
+                                                        <option selected disabled>Set attack...</option>
+                                                        {% for a in player["abilities"].split('<br>') %}
+                                                            <option>{{a}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    <input type="text" class="form-control" required name="player_damage_1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                                <div class="input-group">
+                                                    <select class="form-select" style="width: 110px;" required name="player_attack_2">
+                                                        <option selected disabled>Set attack...</option>
+                                                        {% for a in player["abilities"].split('<br>') %}
+                                                            <option>{{a}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    <input type="text" class="form-control" required name="player_damage_2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 10px;">
+                                                <div class="input-group">
+                                                    <select class="form-select" style="width: 110px;" required name="player_attack_3">
+                                                        <option selected disabled>Set attack...</option>
+                                                        {% for a in player["abilities"].split('<br>') %}
+                                                            <option>{{a}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <span class="input-group-text">
+                                                        <span class="bi bi-cash-coin"></span>
+                                                    </span>
+                                                    <input type="text" class="form-control" required name="player_damage_3">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container d-flex justify-content-center">
+                                        <div class="row">
+                                            <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 0px; padding-right: 0px; padding-bottom: 12px;">
+                                                <div class="input-group">
+<!--                                                    <input type="submit" class="btn btn-primary text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Play now."></input>-->
+                                                    <button type="submit" class="btn btn-primary">&nbspPlay&nbsp</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card pokemon-content">
+                            <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                <img src={{opponent["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="300" height="300">
+                            </div>
+                            <div class="card-body">
+                                <h5 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{opponent["abilities"]}}>{{opponent["name"]}}</h5>
+                                <div class="d-flex justify-content-center">
+                                    {% for t in opponent["types"].split(', ') %}
+                                        {% if t == "Normal" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fighting" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Flying" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Poison" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ground" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Rock" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Bug" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ghost" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Steel" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fire" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Water" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Grass" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Electric" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Psychic" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ice" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dragon" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dark" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fairy" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Shadow" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Unknown" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="card-footer">  <!--d-flex justify-content-center-->
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 12px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_1">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+                                                <input type="text" class="form-control" style="width: 110px;" value={{opponent["attacks"][0]}}>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                <input type="text" class="form-control" value="   ?">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 5px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_2">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+                                                <input type="text" class="form-control" style="width: 110px;" value={{opponent["attacks"][1]}}>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                <input type="text" class="form-control" value="   ?">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 5px; padding-left: 0px; padding-right: 0px; padding-bottom: 10px;">
+                                            <div class="input-group">
+<!--                                                <select class="form-select" style="width: 110px;" required name="attack_3">-->
+<!--                                                    <option selected disabled>Set attack...</option>-->
+<!--                                                    {% for a in player["abilities"].split('<br>') %}-->
+<!--                                                        <option>{{a}}</option>-->
+<!--                                                    {% endfor %}-->
+<!--                                                </select>-->
+                                                <input type="text" class="form-control" style="width: 110px;" value={{opponent["attacks"][2]}}>
+                                                <span class="input-group-text">
+                                                    <span class="bi bi-cash-coin"></span>
+                                                </span>
+                                                <input type="text" class="form-control" value="   ?">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container d-flex justify-content-center" style="visibility: hidden;">
+                                    <div class="row">
+                                        <div class="col-lg-12" style="background-color: #F7F8F9; padding-top: 10px; padding-left: 0px; padding-right: 0px; padding-bottom: 12px;">
+                                            <div class="input-group">
+<!--                                                    <input type="submit" class="btn btn-primary text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Play now."></input>-->
+                                                <button type="" class="btn btn-primary">&nbspPlay&nbsp</button>
+                                                <button type="" class="btn btn-danger">Reset</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+<!--                    <div class="col-lg-1">-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if opponent and all_pokemon %}
+        <div>
+            <br>
+            <br>
+            <br>
+            <h2 class="fw-normal text-center"> Your opponent.</h2>
+            <p class="fw-normal text-center"> Click on the pokemon name to show abilities.</p>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-1">
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="card pokemon-content">
+                            <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                <img src={{opponent["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                            </div>
+                            <div class="card-body">
+                                <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{opponent["abilities"]}}>{{opponent["name"]}}</h6>
+                                <div class="d-flex justify-content-center">
+                                    {% for t in opponent["types"].split(', ') %}
+                                        {% if t == "Normal" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fighting" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Flying" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Poison" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ground" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Rock" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Bug" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ghost" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Steel" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fire" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Water" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Grass" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Electric" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Psychic" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Ice" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dragon" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Dark" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Fairy" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Shadow" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                        {% if t == "Unknown" %}
+                                            <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h2 class="fw-normal text-center"> Choose your player.</h2>
+            <p class="fw-normal text-center"> Click on the pokemon name to show abilities.</p>
+            <br>
+            <br>
+            <br>
+            <div class="container">
+                {% for pokemon in all_pokemon %}
+                <div class="row">
+                    <div class="col-lg-1">
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[0] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[0]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[0]["abilities"]}}>{{pokemon[0]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[0]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{opponent.id}}>
+                                    <input type="hidden" name="player_id" value={{pokemon[0].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[1] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[1]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[1]["abilities"]}}>{{pokemon[1]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[1]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{opponent.id}}>
+                                    <input type="hidden" name="player_id" value={{pokemon[1].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[2] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[2]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[2]["abilities"]}}>{{pokemon[2]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[2]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{opponent.id}}>
+                                    <input type="hidden" name="player_id" value={{pokemon[2].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[3] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[3]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[3]["abilities"]}}>{{pokemon[3]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[3]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{opponent.id}}>
+                                    <input type="hidden" name="player_id" value={{pokemon[3].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[4] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[4]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[4]["abilities"]}}>{{pokemon[4]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[4]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{opponent.id}}>
+                                    <input type="hidden" name="player_id" value={{pokemon[4].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if all_opponents %}
+        <div>
+            <br>
+            <br>
+            <br>
+            <h2 class="fw-normal text-center"> Choose your opponent.</h2>
+            <p class="fw-light text-center"> Click on the pokemon name to show abilities. <strong>Refresh page for a new set of opponents.</strong></p>
+            <br>
+            <br>
+            <br>
+            <div class="container">
+                {% for pokemon in all_opponents %}
+                <div class="row">
+                    <div class="col-lg-1">
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[0] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[0]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[0]["abilities"]}}>{{pokemon[0]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[0]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{pokemon[0].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[1] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[1]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[1]["abilities"]}}>{{pokemon[1]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[1]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{pokemon[1].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[2] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[2]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[2]["abilities"]}}>{{pokemon[2]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[2]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{pokemon[2].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[3] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[3]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[3]["abilities"]}}>{{pokemon[3]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[3]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{pokemon[3].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% if pokemon[4] %}
+                            <div class="card pokemon-content">
+                                <div class="d-flex justify-content-center pokemon-image" style="background-color: #525252;">
+                                    <img src={{pokemon[4]["img_url"]}} class="card-img-top" onerror="this.onerror=null; this.src='/static/img/pokeball.png'" alt="..." width="200" height="200">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class = "card-title text-center" role="button" data-bs-toggle="popover" data-bs-placement="right" tabindex="0" data-bs-trigger="focus" data-bs-html="true" title="Abilities" data-bs-content={{pokemon[4]["abilities"]}}>{{pokemon[4]["name"]}}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        {% for t in pokemon[4]["types"].split(', ') %}
+                                            {% if t == "Normal" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #1B6B93; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fighting" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #068DA9; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Flying" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #E55807; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Poison" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F5EA5A; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ground" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #0081B4; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Rock" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFC93C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Bug" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB455F; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ghost" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #46C2CB; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Steel" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #628E90; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fire" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FF731D; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Water" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #256D85; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Grass" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #277BC0; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Electric" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFB200; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Psychic" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #355764; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Ice" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #5A8F7B; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dragon" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #FFEA11; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Dark" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #EB5353; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Fairy" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #F9D923; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Shadow" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #36AE7C; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                            {% if t == "Unknown" %}
+                                                <small class="card-text align-middle" style="border-radius: 4px; background: #187498; color: white; padding: 5px; margin: 6px;">&nbsp{{t}}&nbsp</small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <form method="POST" action="/arena">
+                                    <input type="hidden" name="opponent_id" value={{pokemon[4].id}}> <!--can also get through dot-->
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <input type="submit" class="btn text-decoration-none text-success" style="padding: 0px; margin: 0px;" value="Choose"></input>
+                                    </div>
+                                    <!--<a href="/arena" class="card-footer btn text-decoration-none text-success">Catch for {{pokemon[0]["coins"]}} coins.</a>-->
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <br>
+        <br>
+    </div>
+{% endblock %}
+
