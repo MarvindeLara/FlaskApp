@@ -17,88 +17,18 @@ from program.data.models.pokemons import Pokemon
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'  # same name as login function
-
-# @app.route('/', methods=['GET', 'POST'])
-# @app.route('/index', methods=['GET', 'POST'])
-# # @login_required
-# def index():
-#     # cache this VERY IMPORTANT
-#
-#     pokemon_data = None
-#     if request.method == 'POST' and 'pokemon_type' in request.form:
-#         pokemon_type = request.form.get('pokemon_type')
-#         r = requests.get('https://pokeapi.co/api/v2/type/' + pokemon_type.lower())
-#         pokemon_data = r.json()
-#         pokemon_data = pokemon_data['pokemon']
-#     else:
-#         r = requests.get('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
-#         pokemon_data = r.json()
-#         pokemon_data = pokemon_data['results']
-#
-#     all_pokemon = []
-#     row_pokemon = {0: None, 1: None, 2: None, 3: None, 4: None}
-#
-#     # random.shuffle(pokemon_data)
-#
-#     for i in pokemon_data:
-#         if request.method == 'POST' and 'pokemon_type' in request.form:
-#             pokemon_id = i['pokemon']['url'].split('/')[-2]
-#         else:
-#             pokemon_id = i['url'].split('/')[-2]
-#         r = requests.get('https://pokeapi.co/api/v2/pokemon/' + pokemon_id)
-#         pokemon = r.json()
-#
-#         if not pokemon["sprites"]["other"]["official-artwork"]["front_shiny"]:
-#             continue
-#
-#         # name = pokemon["species"]["name"][0].upper() + pokemon["species"]["name"][1:]
-#         # types = [pokemon_type["type"]["name"][0].upper() + pokemon_type["type"]["name"][1:]
-#         #          for pokemon_type in pokemon["types"]]
-#         # types = ", ".join(types)
-#         # abilities = [pokemon_type["ability"]["name"][0].upper() + pokemon_type["ability"]["name"][1:]
-#         #              for pokemon_type in pokemon["abilities"]]
-#         # abilities = ", ".join(abilities)
-#         # img_url = pokemon["sprites"]["other"]["official-artwork"]["front_shiny"]
-#         # coins = random.randint(50, 500)
-#         # db_pokemon = Pokemon(name=name, types=types, abilities=abilities, img_url=img_url, coins=coins)
-#         # db.session.add(db_pokemon)
-#         # db.session.commit()
-#         # db.session.close()
-#
-#         if not row_pokemon[0]:
-#             row_pokemon[0] = pokemon
-#         elif not row_pokemon[1]:
-#             row_pokemon[1] = pokemon
-#         elif not row_pokemon[2]:
-#             row_pokemon[2] = pokemon
-#         elif not row_pokemon[3]:
-#             row_pokemon[3] = pokemon
-#         else:
-#             row_pokemon[4] = pokemon
-#             all_pokemon.append(row_pokemon)
-#             row_pokemon = {0: None, 1: None, 2: None, 3: None, 4: None}
-#
-#     if row_pokemon[0]:  # for last incomplete row
-#         all_pokemon.append(row_pokemon)
-#
-#     return render_template('index.html', all_pokemon=all_pokemon)
+login_manager.login_view = 'login'  
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 # @login_required
 def index():
-    # cache this VERY IMPORTANT (user is cached in current_user, pokemons are cached in database and global variable
-    # __pokemons)
 
     pokemon_data = None
 
     if request.method == 'POST' and 'pokemon_type' in request.form:
         pokemon_type = request.form.get('pokemon_type')
-        # r = requests.get('https://pokeapi.co/api/v2/type/' + pokemon_type.lower())
-        # pokemon_data = r.json()
-        # pokemon_data = pokemon_data['pokemon']
 
         if not current_user.is_authenticated:
             pokemon_data = Pokemon.query.filter(Pokemon.types.contains(pokemon_type)).all()
@@ -115,9 +45,6 @@ def index():
             """)
             pokemon_data = list(db.session.execute(statement, {'id': current_user.id, 'type': pokemon_type}))
     else:
-        # r = requests.get('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
-        # pokemon_data = r.json()
-        # pokemon_data = pokemon_data['results']
 
         if not current_user.is_authenticated:
             pokemon_data = Pokemon.query.order_by(Pokemon.id).all()
@@ -133,196 +60,6 @@ def index():
             ORDER BY pokemons.id ASC;
             """)
             pokemon_data = list(db.session.execute(statement, {'id': current_user.id}))
-
-        # TODO: load badges data OK, spent OK and earned coins OK, arena
-        # file_names = [
-        #     "01_Boulder_Badge.png",
-        #     "02_Cascade_Badge.png",
-        #     "03_Thunder_Badge.png",
-        #     "04_Rainbow_Badge.png",
-        #     "05_Soul_Badge.png",
-        #     "06_Marsh_Badge.png",
-        #     "07_Volcano_Badge.png",
-        #     "08_Earth_Badge.png",
-        #     "09_Zephyr_Badge.png",
-        #     "10_Hive_Badge.png",
-        #     "11_Plain_Badge.png",
-        #     "12_Fog_Badge.png",
-        #     "13_Storm_Badge.png",
-        #     "14_Mineral_Badge.png",
-        #     "15_Glacier_Badge.png",
-        #     "16_Rising_Badge.png",
-        #     "17_Stone_Badge.png",
-        #     "18_Knuckle_Badge.png",
-        #     "19_Dynamo_Badge.png",
-        #     "20_Heat_Badge.png",
-        #     "21_Balance_Badge.png",
-        #     "22_Feather_Badge.png",
-        #     "23_Mind_Badge.png",
-        #     "24_Rain_Badge.png",
-        #     "25_Coal_Badge.png",
-        #     "26_Forest_Badge.png",
-        #     "27_Cobble_Badge.png",
-        #     "28_Fen_Badge.png",
-        #     "29_Relic_Badge.png",
-        #     "30_Mine_Badge.png",
-        #     "31_Icicle_Badge.png",
-        #     "32_Beacon_Badge.png",
-        #     "33_Trio_Badge.png",
-        #     "34_Basic_Badge.png",
-        #     "35_Insect_Badge.png",
-        #     "36_Bolt_Badge.png",
-        #     "37_Quake_Badge.png",
-        #     "38_Jet_Badge.png",
-        #     "39_Freeze_Badge.png",
-        #     "40_Legend_Badge.png",
-        #     "41_Toxic_Badge.png",
-        #     "42_Wave_Badge.png",
-        #     "43_Cliff_Badge.png",
-        #     "44_Rumble_Badge.png",
-        #     "45_Plant_Badge.png",
-        #     "46_Voltage_Badge.png",
-        #     "47_Fairy_Badge.png",
-        #     "48_Psychic_Badge.png",
-        #     "49_Iceberg_Badge.png",
-        #     "50_Grass_Badge.png",
-        #     "51_Water_Badge.png",
-        #     "52_Fire_Badge.png",
-        #     "53_Fighting_Badge.png",
-        #     "54_Ghost_Badge.png",
-        #     "55_GalarFairy_Badge.png",
-        #     "56_Rock_Badge.png",
-        #     "57_Ice_Badge.png",
-        #     "58_Dark_Badge.png",
-        #     "59_Dragon_Badge.png",
-        #     "60_Cortondo_Badge.png",
-        #     "61_Artazon_Badge.png",
-        #     "62_Levincia_Badge.png",
-        #     "63_Cascarrafa_Badge.png",
-        #     "64_Medali_Badge.png",
-        #     "65_Montenevera_Badge.png",
-        #     "66_Alfornada_Badge.png",
-        #     "67_Glaseado_Badge.png",
-        #     "68_Segin_Badge.png",
-        #     "69_Schedar_Badge.png",
-        #     "70_Navi_Badge.png",
-        #     "71_Ruchbah_Badge.png",
-        #     "72_Caph_Badge.png",
-        #     "73_South_Province_Badge.png",
-        #     "74_West_Province_Badge.png",
-        #     "75_East_Province_Badge.png",
-        #     "76_Asado_Desert_Badge.png",
-        #     "77_Casseroya_Lake_Badge.png",
-        #     "78_Coral-Eye_Badge.png",
-        #     "79_Sea_Ruby_Badge.png",
-        #     "80_Spike_Shell_Badge.png",
-        #     "81_Jade_Star_Badge.png",
-        #     "82_Tranquility_Badge.png",
-        #     "83_Freedom_Badge.png",
-        #     "84_Patience_Badge.png",
-        #     "85_Harmony_Badge.png",
-        #     "86_Pride_Badge.png",
-        # ]
-        #
-        # descriptions = [
-        #     "It is a simple gray octagon.",
-        #     "It is in the shape of a light blue raindrop.",
-        #     "It is in the shape of an eight-pointed gold star with an orange octagon in the center.",
-        #     "It is shaped like a flower, showing grass, with rainbow colored petals.",
-        #     "It is in the shape of a fuchsia heart.",
-        #     "It is two concentric golden circles.",
-        #     "It is red and shaped like a flame with a small pink diamond in the center.",
-        #     "It is shaped like a plant, most likely a Sakaki tree, which is where Giovanni's Japanese name comes from.",
-        #     "It is shaped like a pair of wings. The Badge is named after the Greek god of the west wind.",
-        #     "It is shaped like a ladybug viewed from above.",
-        #     "It is a plain diamond. This Badge is not obtainable until after the player talks to Whitney a second time.",
-        #     "It is shaped like a wispy ghost.",
-        #     "It is shaped like a fist.",
-        #     "It is a steel-colored octagon.",
-        #     "It is a hexagon with a snowflake design.",
-        #     "It is shaped like a dragon's face.",
-        #     "It is shaped like a rectangle with two of its corners more emphasized than the others.",
-        #     "It is shaped like a boxing glove.",
-        #     "It is shaped like a coiled wire.",
-        #     "It is shaped like a wisp of fire.",
-        #     "It is shaped like two circles, counterbalancing each other or a barbell.",
-        #     "It is shaped like feathers on a bird's wing.",
-        #     "It is shaped like a heart, with two sides closing in, possibly in reference to how Tate and Liza are twins.",
-        #     "It is shaped like three raindrops arranged in a triangle.",
-        #     "It is shaped like a boulder and a Poké Ball combined. It also resembles Roark's hard hat, or possibly a treasure chest.",
-        #     "It is shaped like three trees of a forest, with the trunks whited out.",
-        #     "It is reminiscent of bricks or a tatami mat.",
-        #     "It is shaped like a lake with gray reeds around it or a wave seen from the front, a reference to the type of wetland called a fen. It also resembles Crasher Wake's Mask.",
-        #     "It is similar in appearance to a Will-o'-the-wisp or a ghostly aura. It also resembles Fantina's hair.",
-        #     "It is shaped like three stones and three pickaxes combined.",
-        #     "It is shaped like an iceberg or two icy mountains.",
-        #     "It is shaped like a lighthouse.",
-        #     "It is shaped like a bow tie, similar to those worn by the Striaton Gym Leaders. It may also bear a resemblance to an opened pea pod, which contains two large peas; one green and one blue, with a smaller red pea at the center.",
-        #     "It is shaped like a purple spine of a book.",
-        #     "It is shaped like a green heart divided into three parts or the wings and body of an insect.",
-        #     "It is shaped like a lightning bolt or a Pikachu or Emolga tail, with an orange crown sticking out of the tip.",
-        #     "It is shaped like a vertical piece of earth, the top half of which has cracked and slid out of place, resembling the result of an earthquake, or as two tectonic plates interacting.",
-        #     "It is shaped like a stylized feather, with a soaring bird at the bottom.",
-        #     "It is shaped like three white icicles.",
-        #     "It is shaped like a dragon's head with the snout pointing downwards, a medieval mace, or a dragon's wing when stretched out.",
-        #     "It is shaped like a smoke signal with four small purple circles lining up to a poison mark.",
-        #     "It is shaped like a raindrop with waves in it.",
-        #     "It is shaped like a cliff or a rock climbing wall.",
-        #     "It is shaped like two fists clashing against each other.",
-        #     "It is shaped like a leaf, with the veins forming the shape of a plant.",
-        #     "It is shaped like a shield with bolts shooting out of it.",
-        #     "It is shaped like a vitrail with motifs of fairy or butterfly.",
-        #     "It is shaped like a crystal ball emanating smoke.",
-        #     "It is shaped like a snowflake with an iceberg in the center.",
-        #     "It is a design shaped like a stylized leaf of spinach or a leaf floating in the wind.",
-        #     "It is a design shaped like three water droplets in the shape of a Tomoe or a splash.",
-        #     "It is a design shaped like a flame.",
-        #     "It is a design shaped like a fist with a trail indicating a punching motion.",
-        #     "It is a design shaped like a will-o'-the-wisp.",
-        #     "It is a design shaped like a stylized fairy or butterfly.",
-        #     "It is a design shaped like a boulder with cracks in it.",
-        #     "It is a design shaped like an ice cube.",
-        #     "It is a design shaped like a demonic face with horns and a wide, toothy grin.",
-        #     "It is a design shaped like a dragon's face and neck when viewed from the side.",
-        #     "It is a round badge with the icon for the Bug type on it.",
-        #     "It is a round badge with the icon for the Grass type on it.",
-        #     "It is a round badge with the icon for the Electric type on it.",
-        #     "It is a round badge with the icon for the Water type on it.",
-        #     "It is a round badge with the icon for the Normal type on it.",
-        #     "It is a round badge with the icon for the Ghost type on it.",
-        #     "It is a round badge with the icon for the Psychic type on it.",
-        #     "It is a round badge with the icon for the Ice type on it.",
-        #     "It is a round badge with the icon for the Dark type overlaid on top of Team Star's logo.",
-        #     "It is a round badge with the icon for the Fire type overlaid on top of Team Star's logo.",
-        #     "It is a round badge with the icon for the Poison type overlaid on top of Team Star's logo.",
-        #     "It is a round badge with the icon for the Fairy type overlaid on top of Team Star's logo.",
-        #     "It is a round badge with the icon for the Fighting type overlaid on top of Team Star's logo.",
-        #     "It is a round badge with the icon for the Rock type on it.",
-        #     "It is a round badge with the icon for the Flying type on it.",
-        #     "It is a round badge with the icon for the Steel type on it.",
-        #     "It is a round badge with the icon for the Ground type on it.",
-        #     "It is a round badge with the icon for the Dragon type on it.",
-        #     "It is shaped like a tellins shell with a small gemstone on it. Its Japanese name refers to Nitidotellina nitidula (桜貝 sakuragai), a species of tellins.",
-        #     "It is shaped like a giant clam shell with a small gemstone on it. Its Japanese name refers to the maxima clam (白波貝 shiranamigai).",
-        #     "It is shaped like a triumphant star turban with a small gemstone on it. Its Japanese name refers to the triumphant star turban (輪宝貝 rinbōgai).",
-        #     "It is shaped like a purple snail shell with a small gemstone on it. Its Japanese name refers to the elongate janthina (瑠璃貝 rurigai), a species of sea snails.",
-        #     "The green hexagon and gold, leaf-like emblem reference Erika's Grass-type specialty.",
-        #     "Resembles a feather, similar to Skyla's Badge in the core series, the Jet Badge.",
-        #     "Resembles a tatami door, something seen in Petalburg Gym.",
-        #     "It is shaped like a stylized snowflake, referencing Pryce's Ice-type specialty.",
-        #     "It is shaped like a tall volcano or mountain, in reference to the mountainous Poni Island where Hapu comes from.",
-        # ]
-        #
-        # for i in range(0, 86):
-        #     name = file_names[i][3: -4].replace('_', ' ')
-        #     file_name = '/static/img/' + file_names[i]
-        #     description = descriptions[i]
-        #     coins = 100 + (i * 200)
-        #
-        #     db.session.expire_on_commit = False
-        #     badge = Badge(name=name, file_name=file_name, description=description, coins=coins)
-        #     db.session.add(badge)
-        #     db.session.commit()
 
     all_pokemon = []
     row_pokemon = {0: None, 1: None, 2: None, 3: None, 4: None}
@@ -385,9 +122,6 @@ def index():
 @app.route('/account/pokemons', methods=['GET', 'POST'])
 @login_required
 def pokemons():
-    # cache this VERY IMPORTANT (user is cached in current_user, pokemons are cached in database and global variable
-    # __pokemons)
-
     pokemon_data = None
     pokemon_id = None
     player_id = current_user.id
@@ -403,18 +137,13 @@ def pokemons():
         my_pokemon = MyPokemon(player_id=player_id, pokemon_id=pokemon_id)
         db.session.add(my_pokemon)
         db.session.commit()
-        # db.session.close()
 
         pokemon = Pokemon.query.filter_by(id=pokemon_id).first()
-        # player = Player.query.filter_by(id=player_id).first() can use current_user
         current_user.coins = current_user.coins - pokemon.coins
         db.session.commit()
 
-        # print(pokemon_id)
         return redirect(url_for('pokemons'))
         #  POST-REDIRECT-GET pattern solves the resubmission issue on refresh page
-
-    # pokemon_data = MyPokemon.query.filter_by(player_id=player_id).order_by(MyPokemon.created_date).all()
 
     statement = text("""
     SELECT pokemons.id, pokemons.name, pokemons.types, pokemons.abilities, pokemons.img_url, pokemons.coins
@@ -428,8 +157,6 @@ def pokemons():
 
     all_pokemon = []
     row_pokemon = {0: None, 1: None, 2: None, 3: None, 4: None}
-
-    # random.shuffle(pokemon_data)
 
     for pokemon in pokemon_data:
         html_pokemon = {}
@@ -463,9 +190,6 @@ def pokemons():
 @app.route('/account/badges')
 @login_required
 def badges():
-    # cache this VERY IMPORTANT (user is cached in current_user, pokemons are cached in database and global variable
-    # __pokemons)
-
     badge_data = Badge.query.order_by(Badge.created_date.asc()).all()
 
     # statement = text("""
@@ -480,8 +204,6 @@ def badges():
 
     all_badge = []
     row_badge = {0: None, 1: None, 2: None, 3: None, 4: None}
-
-    # random.shuffle(pokemon_data)
 
     for badge in badge_data:
         html_badge = {}
@@ -525,7 +247,6 @@ def badges():
 
 @app.route('/arena/result')
 def arena_result():
-
     opponent = session['result']['opponent']
     player = session['result']['player']
     result = session['result']['result']
@@ -537,8 +258,6 @@ def arena_result():
 @app.route('/arena', methods=['GET', 'POST'])
 @login_required
 def arena():
-    # cache this VERY IMPORTANT (user is cached in current_user, pokemons are cached in database and global variable
-    # __pokemons)
 
     pokemon_data = None
     opponent = None
@@ -656,9 +375,6 @@ def arena():
         session['result']['result'] = result
         return redirect(url_for('arena_result'))
 
-        # return render_template('arena_result.html', all_opponents=None, all_pokemon=None, opponent=opponent, player=player,
-        #                        result=result)
-
     if request.method == 'POST' and 'opponent_id' in request.form and 'player_id' in request.form:
         opponent_id = request.form.get('opponent_id')
         player_id = request.form.get('player_id')
@@ -733,8 +449,6 @@ def arena():
 
         all_pokemon = []
         row_pokemon = {0: None, 1: None, 2: None, 3: None, 4: None}
-
-        # random.shuffle(pokemon_data)
 
         for pokemon in pokemon_data:
             html_pokemon = {}
